@@ -1,47 +1,27 @@
-import React, { useState } from "react";
-import Expenses from "./components/Expenses/Expenses";
-import "./App.css";
-import NewExpense from "./components/NewExpense/NewExpense";
-import ExpensesFilter from "./components/Expenses/ExpensesFilter";
+import React, { useContext } from "react";
 
-const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    title: "Toilet Paper",
-    amount: 94.12,
-    date: new Date(2020, 7, 14),
-  },
-  { id: "e2", title: "New TV", amount: 799.49, date: new Date(2021, 2, 12) },
-  {
-    id: "e3",
-    title: "Car Insurance",
-    amount: 294.67,
-    date: new Date(2021, 2, 28),
-  },
-  {
-    id: "e4",
-    title: "New Desk (Wooden)",
-    amount: 450,
-    date: new Date(2021, 5, 12),
-  },
-];
+import Login from "./components/Login/Login";
+import Home from "./components/Home/Home";
+import MainHeader from "./components/MainHeader/MainHeader";
+import AuthContext from "./store/auth-context";
 
-const App = () => {
-  const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
-
-  const addExpenseHandler = (expense) => {
-    setExpenses((prevExpenses) => {
-      return [expense, ...prevExpenses];
-    });
-  };
-
+function App() {
+  const ctx = useContext(AuthContext);
   return (
-    <div className="App-header">
-      <NewExpense onAddExpense={addExpenseHandler} />
-
-      <Expenses items={expenses} />
-    </div>
+    <React.Fragment>
+      <MainHeader />
+      <main>
+        {!ctx.isLoggedIn && <Login />}
+        {ctx.isLoggedIn && <Home />}
+      </main>
+    </React.Fragment>
   );
-};
+}
 
 export default App;
+
+//I put these numbers to understand when useEffect function is run.
+//When App start, useEffect will run after and only once will run.
+//When Re-evaluation, useEffect won't run cause dependencies not changed.
+//But first time it will run regardless of dependencies.
+//And we know; useState triggers re-evaluation.
